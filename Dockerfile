@@ -7,17 +7,17 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["BackendTiendaVirtual.csproj", "."]
-RUN dotnet restore "./BackendTiendaVirtual.csproj"
-COPY . .
+COPY ["sistema ventas/sistema ventas.csproj", "."]
+RUN dotnet restore "./sistema ventas.csproj"
+COPY ["sistema ventas", "."]
 WORKDIR "/src/."
-RUN dotnet build "BackendTiendaVirtual.csproj" -c Release -o /app/build
+RUN dotnet build "sistema ventas.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "BackendTiendaVirtual.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "sistema ventas.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 COPY --from=publish /src/certificate.pfx .
-ENTRYPOINT ["dotnet", "BackendTiendaVirtual.dll"]
+ENTRYPOINT ["dotnet", "sistema ventas.dll"]
